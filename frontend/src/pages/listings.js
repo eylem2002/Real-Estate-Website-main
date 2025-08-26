@@ -4,23 +4,24 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   HeaderContainer,
   ListingItemContainer,
-  // AdvancedSearchContainer,
   FooterContainer,
 } from "../containers";
 import { Section } from "../components";
 import { getPropertyList } from "../redux/actions/propertiesAction";
 
-/* --- simple local wrappers to center content --- */
-const PageWrap = styled.div`
-  width: min(1200px, 92%);
-  margin: 0 auto;
+/* Full-bleed version of Section.InnerContainer */
+const FullBleed = styled(Section.InnerContainer)`
+  width: 100%;
+  max-width: none;            /* remove the built-in container width */
+  padding-left: clamp(12px, 2vw, 24px);
+  padding-right: clamp(12px, 2vw, 24px);
 `;
 
+/* Stretch cards to fill the row */
 const Cards = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;   /*  center the row */
-  gap: 24px;                 /* even spacing between cards */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 `;
 
 const Listing = () => {
@@ -37,34 +38,25 @@ const Listing = () => {
       <HeaderContainer bg="false" />
 
       <Section bgColor="--bs-fade-info">
-        <Section.InnerContainer>
-          {/* If you’re not using the left filter, drop it so centering is perfect */}
-          {/* <Section.FlexItem width="30%" relative flexStart>
-            <Section.Shadow>
-              <AdvancedSearchContainer />
-            </Section.Shadow>
-          </Section.FlexItem> */}
+        <FullBleed>
+          <Section.Title style={{ textAlign: "center" }}>
+            Our Property List
+          </Section.Title>
 
-          <PageWrap>
-            <Section.Title style={{ textAlign: "center" }}>
-              Our Property List
-            </Section.Title>
+          <Cards>
+            {properties.map((featured) => (
+              <ListingItemContainer
+                key={featured.id}
+                featured={featured}
+                width="100%"   /* let each card fill its grid cell */
+              />
+            ))}
+          </Cards>
 
-            <Cards>
-              {properties.map((featured) => (
-                <ListingItemContainer
-                  key={featured.id}
-                  featured={featured}
-                  width="32%"   /* keep same sizing, now centered */
-                />
-              ))}
-            </Cards>
-
-            <Section.Footer style={{ display: "flex", justifyContent: "center" }}>
-              <Section.Button>More Listing</Section.Button>
-            </Section.Footer>
-          </PageWrap>
-        </Section.InnerContainer>
+          <Section.Footer style={{ display: "flex", justifyContent: "center" }}>
+            <Section.Button>More Listing</Section.Button>
+          </Section.Footer>
+        </FullBleed>
       </Section>
 
       <FooterContainer />
