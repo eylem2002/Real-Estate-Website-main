@@ -17,16 +17,15 @@ export const Container = styled.div`
 `;
 export const Top = styled.div``;
 export const Bottom = styled.div``;
-export const Image = styled.img`
+export const Image = styled.img.attrs(p => ({
+  alt: p.alt || "Property photo",
+  loading: "lazy",
+}))`
   width: 100%;
-  ${({ profile }) =>
-    profile === "true" &&
-    `
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  margin-left: -14px;
-  `}
+  height: clamp(200px, 22vw, 260px);
+  object-fit: cover;
+  display: block;
+  background: #f2f4f7;
 `;
 export const ImageContainer = styled.div``;
 export const TopItem = styled.div`

@@ -6,18 +6,21 @@ import {
 import { api } from "../../helpers/api";
 
 
-const toCard = (row) => {
-  const location = [row.city, row.state].filter(Boolean).join(", ");
-  return {
-    id: row.id,
-    title: row.title,
-    price: row.price,
-    location,
-    description: row.description || "",
-    images: row.imageUrl ? [row.imageUrl] : [],
-    featured: !!row.featured,
-  };
+const toPublicUrl = (name) => {
+  if (!name) return "/placeholder.jpg";
+  if (/^https?:\/\//i.test(name) || name.startsWith("/")) return name;
+  return `/images/houses/${name.replace(/^\/+/, "")}`;
 };
+
+const toCard = (row) => ({
+  id: row.id,
+  title: row.title,
+  price: row.price,
+  location: [row.city, row.state].filter(Boolean).join(", "),
+  description: row.description || "",
+  imageUrl: toPublicUrl(row.imageUrl),
+  featured: !!row.featured,
+});
 
 export const getPropertyList = (page = 1, limit = 12) => async (dispatch) => {
   const rows = await api(`/api/properties?page=${page}&limit=${limit}`);

@@ -6,15 +6,13 @@ import { Listing } from "../components";
 const ListingItemContainer = ({ featured, width }) => {
   if (!featured) return null;
 
-  const imageSrc = Array.isArray(featured.images) && featured.images.length > 0
-    ? featured.images[0]
-    : "default.jpg";
 
   return (
     <Listing width={width}>
       <Listing.Top>
         <Listing.TopItem>
-          <Listing.Image source={imageSrc} />
+          <Listing.Image src={featured.imageUrl} alt={featured.title} />
+
           <Listing.TopItemContainer>
             <Listing.TopItemInfo>
               <Listing.Icon />
