@@ -14,6 +14,26 @@ export const db = await open({
   driver: sqlite3.Database,
 });
 
+export async function ensurePropertiesTable() {
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS properties (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      price REAL,
+      city TEXT,
+      state TEXT,
+      image_url TEXT,
+      featured INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+}
+
+await ensurePropertiesTable();
+
+
+
 await db.exec("PRAGMA busy_timeout = 5000");
 
 // Ensure users table exists (base columns)

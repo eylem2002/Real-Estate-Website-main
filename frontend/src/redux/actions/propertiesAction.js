@@ -3,20 +3,33 @@ import {
   GET_FEATURED_PROPERTIES,
   GET_PROPERTY,
 } from "../constants/propertyConstants";
-import properties from "../../dev-data/listing";
+import { api } from "../../helpers/api";
 
-export const getPropertyList = () => async (dispatch) => {
-  dispatch({ type: GET_PROPERTIES, payload: properties });
+
+const toCard = (row) => {
+  const location = [row.city, row.state].filter(Boolean).join(", ");
+  return {
+    id: row.id,
+    title: row.title,
+    price: row.price,
+    location,
+    description: row.description || "",
+    images: row.imageUrl ? [row.imageUrl] : [],
+    featured: !!row.featured,
+  };
+};
+
+export const getPropertyList = (page = 1, limit = 12) => async (dispatch) => {
+  const rows = await api(`/api/properties?page=${page}&limit=${limit}`);
+  dispatch({ type: GET_PROPERTIES, payload: rows.map(toCard) });
 };
 
 export const getFeaturedList = () => async (dispatch) => {
-  const featured = properties
-    .filter((property) => property.featured === true)
-    .slice(0, 6);
-  dispatch({ type: GET_FEATURED_PROPERTIES, payload: featured });
+  const rows = await api(`/api/properties?featured=true&limit=6`);
+  dispatch({ type: GET_FEATURED_PROPERTIES, payload: rows.map(toCard) });
 };
 
 export const getProperty = (id) => async (dispatch) => {
-  const property = properties.find((property) => property.id === +id);
-  dispatch({ type: GET_PROPERTY, payload: property });
+  const row = await api(`/api/properties/${id}`);
+  dispatch({ type: GET_PROPERTY, payload: toCard(row) });
 };

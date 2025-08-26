@@ -1,5 +1,4 @@
 {
-  
   "name": "restate",
   "version": "0.1.0",
   "private": true,
@@ -21,8 +20,6 @@
     "styled-components": "^5.3.0",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.2"
- 
-
   },
   "scripts": {
     "start": "react-scripts start",

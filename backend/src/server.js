@@ -1,24 +1,25 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";            // <-- add
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import authRouter, { requireAuth } from "./routes/auth.js"; // <-- add
+import authRouter, { requireAuth } from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 
+import propertiesRouter from "./routes/properties.js";
 
 
 
 dotenv.config();
 const app = express();
-// ✅ Allow frontend (React) to call backend
+//  Allow frontend (React) to call backend
 app.use(cors({
-  origin: process.env.CLIENT_URL,       // <- use env
+  origin: [process.env.CLIENT_URL, "http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
 app.use(express.json());
-app.use(cookieParser());           // <-- add
+app.use(cookieParser());
 
 
 app.get("/", (req, res) => {
@@ -40,6 +41,10 @@ app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.get("/api/protected-ping", requireAuth, (req, res) =>
   res.json({ pong: true, user: req.user })
 );
+
+
+app.use("/api/properties", propertiesRouter);
+
 
 const PORT = process.env.PORT || 7542; // <- use env first
 
